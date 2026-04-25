@@ -75,6 +75,11 @@ html, body {
   color: var(--red2);
 }
 
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
+
 .action-btn {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -83,7 +88,7 @@ html, body {
   color: #ffffff;
   font-family: 'Nunito', sans-serif;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 13px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -135,14 +140,14 @@ html, body {
   gap: 8px;
   overflow-x: auto;
   padding-bottom: 0;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
-  -webkit-overflow-scrolling: touch; /* Smooth scrolling for iOS */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
 }
 
 .tabs::-webkit-scrollbar {
-  display: none; /* Chrome/Safari */
+  display: none;
 }
 
 .tab {
@@ -238,7 +243,7 @@ html, body {
   border-radius: 50%;
   display: inline-block;
   flex-shrink: 0;
-  background: var(--red2); /* Diseragamkan */
+  background: var(--red2);
 }
 
 /* ===== MENU GRID ===== */
@@ -267,7 +272,7 @@ html, body {
 
 .menu-img-wrap {
   width: 100%;
-  padding-top: 100%; /* Rasio 1:1 */
+  padding-top: 100%;
   position: relative;
   background-color: var(--bg);
 }
@@ -321,7 +326,7 @@ html, body {
   font-size: 11px;
   margin-bottom: 8px;
   line-height: 1.4;
-  height: 30px; /* Consistensi tinggi */
+  height: 30px;
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -355,7 +360,7 @@ html, body {
   transition: transform 0.2s, box-shadow 0.2s;
   color: #ffffff;
   line-height: 1;
-  background: var(--red2); /* Diseragamkan */
+  background: var(--red2);
 }
 
 .add-btn:hover {
@@ -446,7 +451,7 @@ html, body {
   box-shadow: 0 4px 12px rgba(232, 52, 26, 0.3);
 }
 
-/* ===== OVERLAY UMUM ===== */
+/* ===== OVERLAYS ===== */
 #popupOverlay {
   z-index: 299;
   background: rgba(0, 0, 0, 0.8);
@@ -467,7 +472,11 @@ html, body {
   pointer-events: all;
 }
 
-/* ===== BOTTOM PANEL ===== */
+#paymentOverlay {
+  z-index: 202; /* Stack di atas panel lainnya jika diperlukan */
+}
+
+/* ===== BOTTOM PANELS ===== */
 .cart-panel {
   position: fixed;
   bottom: 0;
@@ -487,6 +496,10 @@ html, body {
 
 .cart-panel.open {
   transform: translateX(-50%) translateY(0);
+}
+
+#panelPayment {
+  z-index: 203; /* Berada paling atas */
 }
 
 .cart-header {
@@ -619,7 +632,7 @@ html, body {
   gap: 12px;
 }
 
-/* ===== CART ITEMS ===== */
+/* ===== CART & HISTORY ITEMS ===== */
 .cart-items {
   flex: 1;
   overflow-y: auto;
@@ -702,7 +715,7 @@ html, body {
   border-top: 1.5px dashed var(--border);
 }
 
-/* ===== EMPTY CART ===== */
+/* ===== EMPTY STATE ===== */
 .empty-cart {
   text-align: center;
   padding: 40px 20px;
@@ -750,6 +763,66 @@ html, body {
   visibility: visible;
 }
 
+/* ===== ORDER HISTORY STYLES ===== */
+.history-card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.history-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  border-bottom: 1px dashed var(--border);
+  padding-bottom: 8px;
+}
+
+.history-id {
+  font-weight: 800;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.history-date {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.history-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.history-total {
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--text);
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 50px;
+  color: white;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
 /* ===== UTILITY ===== */
 .hidden {
   display: none !important;
@@ -771,7 +844,6 @@ html, body {
     border-right: 1px solid var(--border);
   }
 }
-
   </style>
 </head>
 <body>
@@ -780,31 +852,44 @@ html, body {
   <div class="header">
     <div class="header-top">
       <div class="logo">Makan<span>Yuk!</span></div>
-      <button class="action-btn" onclick="toggleSearch()">
-        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
-          <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>
-        </svg>
-        Cari
-      </button>
+      <div class="header-actions">
+        <button class="action-btn" id="btnNavSearch" onclick="toggleSearch()">
+          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor">
+            <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>
+          </svg> Cari
+        </button>
+        <button class="action-btn" id="btnNavProfile" onclick="switchView('profile')">
+          <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor">
+            <path d="M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/>
+          </svg> Riwayat
+        </button>
+        <button class="action-btn hidden" id="btnNavHome" onclick="switchView('home')">
+          <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor">
+            <path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/>
+          </svg> Beranda
+        </button>
+      </div>
     </div>
-    <div class="search-box hidden" id="searchContainer">
-      <span class="search-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor">
-          <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>
-        </svg>
-      </span>
-      <input type="text" placeholder="Cari menu favorit kamu..." id="searchInput" oninput="filterMenu()">
-    </div>
-    <div class="tabs">
-      <button class="tab active" onclick="setTab('makanan', this)">Makanan</button>
-      <button class="tab" onclick="setTab('minuman', this)">Minuman</button>
-      <button class="tab" onclick="setTab('camilan', this)">Camilan</button>
-      <button class="tab" onclick="setTab('paketan', this)">Paketan</button>
+
+    <div id="homeHeaderUI">
+      <div class="search-box hidden" id="searchContainer">
+        <span class="search-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor">
+            <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>
+          </svg>
+        </span>
+        <input type="text" placeholder="Cari menu favorit kamu..." id="searchInput" oninput="filterMenu()">
+      </div>
+      <div class="tabs">
+        <button class="tab active" onclick="setTab('makanan', this)">Makanan</button>
+        <button class="tab" onclick="setTab('minuman', this)">Minuman</button>
+        <button class="tab" onclick="setTab('camilan', this)">Camilan</button>
+        <button class="tab" onclick="setTab('paketan', this)">Paketan</button>
+      </div>
     </div>
   </div>
 
-  <div class="content" id="content">
-    
+  <div class="content" id="viewHome">
     <div class="order-info-banner" id="orderInfoBanner">
       <div class="order-info-text">
         <h3>Tipe Pesanan</h3>
@@ -829,6 +914,11 @@ html, body {
       <div class="section-title"><span class="section-dot"></span>Menu Paketan</div>
       <div class="menu-grid" id="gridPaketan"></div>
     </div>
+  </div>
+
+  <div class="content hidden" id="viewProfile">
+    <div class="section-title" style="font-size: 20px; margin-bottom: 20px;">Riwayat Pesanan</div>
+    <div id="historyListContainer"></div>
   </div>
 
   <div class="bottom-bar" id="bottomBar">
@@ -895,6 +985,44 @@ html, body {
   </div>
 </div>
 
+<div class="cart-overlay" id="detailOverlay" onclick="closeOrderDetail()"></div>
+<div class="cart-panel" id="panelOrderDetail">
+  <div class="cart-header">
+    <h3>Detail Pesanan</h3>
+    <button class="close-btn" onclick="closeOrderDetail()">✕</button>
+  </div>
+  <div class="cart-items" id="detailItems"></div>
+  <div class="cart-footer" id="detailFooter"></div>
+</div>
+
+<div class="cart-overlay" id="paymentOverlay" onclick="closePaymentPanel()"></div>
+<div class="cart-panel" id="panelPayment">
+  <div class="cart-header">
+    <h3>Pembayaran</h3>
+    <button class="close-btn" onclick="closePaymentPanel()">✕</button>
+  </div>
+  <div style="padding: 20px 20px 30px;">
+    
+    <div id="paymentFormArea">
+      <div style="margin-bottom: 20px;">
+        <label style="display:block; margin-bottom:8px; font-weight:800; font-size:14px;">
+          Nama Pemesan <span style="color:var(--red)">*</span>
+        </label>
+        <input type="text" id="customerNameInput" class="form-input" placeholder="Masukkan Nama Anda">
+      </div>
+      <button class="order-btn" onclick="generateQRCode()">Buat Kode QR</button>
+    </div>
+
+    <div id="qrCodeArea" class="hidden" style="text-align: center; margin-top: 10px;">
+      <img id="qrCodeImg" src="" alt="QR Code" style="width: 200px; height: 200px; margin: 0 auto 16px; border-radius: 12px; border: 1px solid var(--border); padding: 10px;">
+      <p style="font-size: 14px; color: var(--muted); margin-bottom: 20px; line-height: 1.5;">Tunjukkan kode QR ini kepada kasir untuk memproses pesanan Anda.</p>
+      
+      <button class="btn-outline" style="border-color: var(--green); color: var(--green);" onclick="simulatePayment()">Simulasi Kasir: Selesai Bayar</button>
+    </div>
+
+  </div>
+</div>
+
 <div class="toast" id="toast">Berhasil ditambahkan!</div>
 
 <script>
@@ -934,6 +1062,38 @@ let currentTab = 'makanan';
 let toastTimer = null;
 let orderMethod = null;
 let itemToDelete = null;
+let currentOrderId = null; // Menampung ID pesanan yang sedang dilihat/dibayar
+
+// ===== LOGIKA NAVIGASI VIEW =====
+function switchView(view) {
+  const viewHome = document.getElementById('viewHome');
+  const viewProfile = document.getElementById('viewProfile');
+  const homeHeaderUI = document.getElementById('homeHeaderUI');
+  const btnNavSearch = document.getElementById('btnNavSearch');
+  const btnNavProfile = document.getElementById('btnNavProfile');
+  const btnNavHome = document.getElementById('btnNavHome');
+
+  if (view === 'profile') {
+    viewHome.classList.add('hidden');
+    viewProfile.classList.remove('hidden');
+    homeHeaderUI.classList.add('hidden');
+    btnNavSearch.classList.add('hidden');
+    btnNavProfile.classList.add('hidden');
+    btnNavHome.classList.remove('hidden');
+    
+    document.getElementById('bottomBar').classList.remove('show');
+    renderOrderHistory();
+  } else {
+    viewHome.classList.remove('hidden');
+    viewProfile.classList.add('hidden');
+    homeHeaderUI.classList.remove('hidden');
+    btnNavSearch.classList.remove('hidden');
+    btnNavProfile.classList.remove('hidden');
+    btnNavHome.classList.add('hidden');
+    
+    updateAll();
+  }
+}
 
 // ===== LOGIKA PENCARIAN =====
 function toggleSearch() {
@@ -1118,12 +1278,9 @@ function renderAll() {
 // ===== TAB NAVIGATION =====
 function setTab(tab, el) {
   currentTab = tab;
-
-  // Update tab buttons
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
 
-  // Show/hide sections
   ['makanan', 'minuman', 'camilan', 'paketan'].forEach(t => {
     const section = document.getElementById('section' + capitalize(t));
     if (section) {
@@ -1180,17 +1337,18 @@ function handleDeleteConfirm(isYes) {
 
 function updateAll() {
   const { total, count } = getTotal();
-
-  // Update bottom bar
   const bar = document.getElementById('bottomBar');
-  bar.classList.toggle('show', count > 0);
+  
+  if (!document.getElementById('viewProfile').classList.contains('hidden')) {
+    bar.classList.remove('show');
+  } else {
+    bar.classList.toggle('show', count > 0);
+  }
+  
   document.getElementById('bottomInfo').textContent = count + ' item';
   document.getElementById('bottomTotal').textContent = fmt(total);
 
-  // Re-render all menus
   renderAll();
-
-  // Update cart if open
   renderCart();
 }
 
@@ -1237,7 +1395,6 @@ function renderCart() {
     return;
   }
 
-  // Render cart items
   cartItemsEl.innerHTML = Object.entries(cart)
     .filter(([, qty]) => qty > 0)
     .map(([id, qty]) => {
@@ -1245,9 +1402,7 @@ function renderCart() {
       if (!m) return '';
       return `
         <div class="cart-item">
-          <div class="cart-item-img-wrap">
-            <img src="${m.img}" alt="${m.name}">
-          </div>
+          <div class="cart-item-img-wrap"><img src="${m.img}" alt="${m.name}"></div>
           <div class="cart-item-info">
             <div class="cart-item-name">${m.name}</div>
             <div class="cart-item-price">${fmt(m.price)} × ${qty} = ${fmt(m.price * qty)}</div>
@@ -1260,7 +1415,6 @@ function renderCart() {
         </div>`;
     }).join('');
 
-  // Render cart footer with totals
   const tax = Math.round(total * 0.1);
   const grandTotal = total + tax;
 
@@ -1280,22 +1434,211 @@ function renderCart() {
     <button class="order-btn" onclick="placeOrder()">Pesan Sekarang</button>`;
 }
 
-// ===== PLACE ORDER =====
+// ===== LOCAL STORAGE & ORDER LOGIC =====
+function getOrdersFromLocal() {
+  return JSON.parse(localStorage.getItem('makanYuk_orders')) || [];
+}
+
+function saveOrderToLocal(order) {
+  let orders = getOrdersFromLocal();
+  orders.unshift(order); // Masukkan di paling atas
+  localStorage.setItem('makanYuk_orders', JSON.stringify(orders));
+}
+
 function placeOrder() {
-  const { count } = getTotal();
+  const { total, count } = getTotal();
   if (count === 0) return;
 
-  // Clear cart
+  const tax = Math.round(total * 0.1);
+  const grandTotal = total + tax;
+
+  const orderItems = [];
+  for (const [id, qty] of Object.entries(cart)) {
+    const m = findMenu(id);
+    if (m && qty > 0) {
+      orderItems.push({
+        id: m.id,
+        name: m.name,
+        price: m.price,
+        qty: qty,
+        img: m.img
+      });
+    }
+  }
+
+  const order = {
+    orderId: 'ORD-' + Math.floor(Math.random() * 1000000),
+    timestamp: new Date().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }),
+    items: orderItems,
+    totalHarga: grandTotal,
+    status: 'belum bayar',
+    method: orderMethod || 'dine_in',
+    customerName: ''
+  };
+
+  saveOrderToLocal(order);
+
   Object.keys(cart).forEach(k => delete cart[k]);
-
-  // Close cart panel
   closeCart();
-
-  // Update UI
   updateAll();
-
-  // Show success toast
+  
   showToast('Pesanan berhasil dikirim!');
+  switchView('profile');
+}
+
+// ===== RENDER ORDER HISTORY =====
+function renderOrderHistory() {
+  const container = document.getElementById('historyListContainer');
+  const orders = getOrdersFromLocal();
+
+  if (orders.length === 0) {
+    container.innerHTML = `
+      <div class="empty-cart">
+        <div class="empty-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" height="64" viewBox="0 -960 960 960" width="64" fill="currentColor">
+            <path d="M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/>
+          </svg>
+        </div>
+        <p>Belum ada riwayat pesanan.</p>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = orders.map(o => {
+    let badgeColor = 'var(--red)';
+    let iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 -960 960 960" width="14" fill="currentColor"><path d="M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg>`;
+    
+    if (o.status === 'disiapkan') {
+      badgeColor = 'var(--orange)';
+      // Memuat ikon SVG Serving / Room Service
+      iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 -960 960 960" width="14" fill="currentColor"><path d="M160-200v-80h640v80H160Zm320-160q-119 0-210.5-73.5T144-620h86q20 74 81 127t169 53q108 0 169-53t81-127h86q-24 113-115.5 186.5T480-360Zm0-320q-33 0-56.5-23.5T400-760q0-33 23.5-56.5T480-840q33 0 56.5 23.5T560-760q0 33-23.5 56.5T480-680Z"/></svg>`;
+    } else if (o.status === 'selesai') {
+      badgeColor = 'var(--green)';
+      iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 -960 960 960" width="14" fill="currentColor"><path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/></svg>`;
+    }
+
+    return `
+      <div class="history-card" onclick="openOrderDetail('${o.orderId}')">
+        <div class="history-header">
+          <span class="history-id">${o.orderId}</span>
+          <span class="history-date">${o.timestamp}</span>
+        </div>
+        <div class="history-body">
+          <div class="history-total">${fmt(o.totalHarga)}</div>
+          <div class="status-badge" style="background-color: ${badgeColor};">
+            ${iconSvg} ${o.status}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ===== HISTORY DETAIL PANEL =====
+function openOrderDetail(orderId) {
+  currentOrderId = orderId; 
+  const orders = getOrdersFromLocal();
+  const order = orders.find(o => o.orderId === orderId);
+  if (!order) return;
+
+  const itemsHTML = order.items.map(item => `
+    <div class="cart-item">
+      <div class="cart-item-img-wrap"><img src="${item.img}" alt="${item.name}"></div>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-price">${fmt(item.price)} × ${item.qty} = ${fmt(item.price * item.qty)}</div>
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById('detailItems').innerHTML = itemsHTML;
+
+  let badgeColor = 'var(--red)';
+  if(order.status === 'disiapkan') badgeColor = 'var(--orange)';
+  if(order.status === 'selesai') badgeColor = 'var(--green)';
+
+  let actionButton = '';
+  if(order.status === 'belum bayar') {
+     actionButton = `<button class="order-btn" style="margin-top:16px;" onclick="openPaymentPanel()">Bayar di Kasir</button>`;
+  }
+
+  document.getElementById('detailFooter').innerHTML = `
+    <div class="total-row grand">
+      <span>Total Bayar</span>
+      <span>${fmt(order.totalHarga)}</span>
+    </div>
+    <div style="text-align:center; margin-top:12px;">
+      <span class="status-badge" style="background-color: ${badgeColor}; padding: 8px 16px; font-size:14px;">Status: ${order.status.toUpperCase()}</span>
+    </div>
+    ${actionButton}
+  `;
+
+  document.getElementById('detailOverlay').classList.add('open');
+  document.getElementById('panelOrderDetail').classList.add('open');
+}
+
+function closeOrderDetail() {
+  document.getElementById('detailOverlay').classList.remove('open');
+  document.getElementById('panelOrderDetail').classList.remove('open');
+}
+
+// ===== PAYMENT PANEL LOGIC =====
+function openPaymentPanel() {
+  // Tutup panel detail terlebih dahulu agar UX lebih halus
+  closeOrderDetail();
+
+  // Reset form pembayaran
+  document.getElementById('customerNameInput').value = '';
+  document.getElementById('paymentFormArea').classList.remove('hidden');
+  document.getElementById('qrCodeArea').classList.add('hidden');
+
+  // Buka panel pembayaran
+  setTimeout(() => {
+    document.getElementById('paymentOverlay').classList.add('open');
+    document.getElementById('panelPayment').classList.add('open');
+  }, 100); // Beri jeda kecil setelah animasi tutup panel detail
+}
+
+function closePaymentPanel() {
+  document.getElementById('paymentOverlay').classList.remove('open');
+  document.getElementById('panelPayment').classList.remove('open');
+}
+
+function generateQRCode() {
+  const nameInput = document.getElementById('customerNameInput').value.trim();
+  if(!nameInput) {
+    alert("Silakan masukkan nama pemesan!");
+    return;
+  }
+
+  // Perbarui nama pemesan ke LocalStorage
+  let orders = getOrdersFromLocal();
+  let orderIndex = orders.findIndex(o => o.orderId === currentOrderId);
+  if(orderIndex !== -1) {
+    orders[orderIndex].customerName = nameInput;
+    localStorage.setItem('makanYuk_orders', JSON.stringify(orders));
+  }
+
+  // Buat QR Code berdasarkan ID Pesanan menggunakan API publik
+  const qrImg = document.getElementById('qrCodeImg');
+  qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${currentOrderId}`;
+
+  // Ganti tampilan input menjadi tampilan kode QR
+  document.getElementById('paymentFormArea').classList.add('hidden');
+  document.getElementById('qrCodeArea').classList.remove('hidden');
+}
+
+function simulatePayment() {
+  let orders = getOrdersFromLocal();
+  let orderIndex = orders.findIndex(o => o.orderId === currentOrderId);
+  if(orderIndex !== -1) {
+    orders[orderIndex].status = 'disiapkan';
+    localStorage.setItem('makanYuk_orders', JSON.stringify(orders));
+  }
+
+  showToast('Pembayaran berhasil dikonfirmasi!');
+  closePaymentPanel();
+  renderOrderHistory();
 }
 
 // ===== INIT =====
