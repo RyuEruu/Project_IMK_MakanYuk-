@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>MakanYuk! — Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+  <style>
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --red: #E8341A;
+  --red2: #FF5535;
+  --orange: #FF8C00;
+  --green: #2ECC71;
+  --dark: #1A1A2E;
+  --dark2: #16213E;
+  --card: #ffffff;
+  --bg: #F8F5F0;
+  --text: #1A1A2E;
+  --muted: #888888;
+  --border: #EEEEEE;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  max-width: 480px;
+  margin: 0 auto;
+  background: #fff;
+  position: relative;
+  box-shadow: 0 0 40px rgba(0,0,0,0.1);
+}
+
+/* ===== LOGIN SCREEN ===== */
+.login-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 32px 24px;
+  background: linear-gradient(160deg, var(--dark) 0%, var(--dark2) 60%, #0f3460 100%);
+}
+
+.login-logo {
+  font-family: 'Fredoka One', cursive;
+  font-size: 36px;
+  color: #fff;
+  margin-bottom: 4px;
+  letter-spacing: 1px;
+}
+.login-logo span { color: var(--red2); }
+
+.login-tagline {
+  color: rgba(255,255,255,0.5);
+  font-size: 13px;
+  margin-bottom: 40px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.login-card {
+  background: #fff;
+  border-radius: 24px;
+  padding: 32px 28px 28px;
+  width: 100%;
+  max-width: 360px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.login-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--dark) 0%, var(--dark2) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  color: #FFC107;
+}
+
+.login-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 24px;
+  text-align: center;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.login-sub {
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+/* Form Input Admin Baru */
+.login-form-group {
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.login-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+
+.login-input {
+  width: 100%;
+  padding: 14px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  background: var(--bg);
+}
+
+.login-input:focus {
+  border-color: var(--dark);
+  background: #fff;
+}
+
+.login-input.error {
+  border-color: var(--red);
+  background: #fff8f8;
+  animation: shake 0.35s ease;
+}
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+.login-err {
+  text-align: center;
+  color: var(--red);
+  font-size: 13px;
+  font-weight: 700;
+  min-height: 20px;
+  margin-bottom: 16px;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, var(--dark) 0%, var(--dark2) 100%);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  letter-spacing: 0.3px;
+}
+.login-btn:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 20px rgba(26,26,46,0.4);
+}
+
+.back-link {
+  margin-top: 16px;
+  text-align: center;
+}
+.back-link a {
+  color: rgba(255,255,255,0.6);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.back-link a:hover { color: #fff; }
+
+/* ===== ADMIN DASHBOARD ===== */
+.admin-screen { display: none; flex-direction: column; min-height: 100vh; }
+.admin-screen.show { display: flex; }
+
+.admin-header {
+  background: linear-gradient(135deg, var(--dark) 0%, var(--dark2) 100%);
+  padding: 18px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.admin-header-left { display: flex; align-items: center; gap: 10px; }
+
+.logo {
+  font-family: 'Fredoka One', cursive;
+  font-size: 24px;
+  color: #fff;
+  letter-spacing: 1px;
+}
+.logo span { color: var(--red2); }
+
+.admin-badge {
+  background: #FFC107;
+  color: var(--dark);
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.logout-btn {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 50px;
+  padding: 8px 14px;
+  color: #fff;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s;
+}
+.logout-btn:hover { background: rgba(232,52,26,0.3); border-color: var(--red2); }
+
+/* ===== TABS ===== */
+.admin-tabs {
+  display: flex;
+  background: #fff;
+  border-bottom: 2px solid var(--border);
+  position: sticky;
+  top: 62px;
+  z-index: 99;
+}
+.admin-tab-btn {
+  flex: 1;
+  padding: 12px 6px 10px;
+  border: none;
+  background: none;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+}
+.admin-tab-btn.active { color: var(--dark); border-bottom-color: var(--red2); }
+
+/* ===== CONTENT AREA ===== */
+.admin-content {
+  flex: 1;
+  padding: 16px;
+  padding-bottom: 32px;
+  overflow-y: auto;
+}
+.hidden { display: none !important; }
+
+/* Section title */
+.section-title {
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+}
+.section-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--red2);
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+/* ===== FILTER BUTTONS ===== */
+.filter-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 14px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.filter-row::-webkit-scrollbar { display: none; }
+.filter-btn {
+  flex: none;
+  padding: 7px 14px;
+  border-radius: 50px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.filter-btn:hover { background: var(--border); }
+.filter-btn.active { background: var(--red2); color: #fff; border-color: var(--red2); }
+.filter-btn.active-orange { background: var(--orange); color: #fff; border-color: var(--orange); }
+.filter-btn.active-green { background: var(--green); color: #fff; border-color: var(--green); }
+
+/* ===== ACTION BUTTONS ===== */
+.action-btn-small {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 50px;
+  padding: 7px 14px;
+  color: #fff;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s;
+}
+
+.btn-red {
+  background: linear-gradient(135deg, var(--red) 0%, var(--red2) 100%);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 14px 16px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  width: 100%;
+}
+.btn-red:hover { transform: scale(1.02); box-shadow: 0 6px 20px rgba(232,52,26,0.4); }
+
+.btn-red-sm {
+  background: linear-gradient(135deg, var(--red) 0%, var(--red2) 100%);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 12px;
+  cursor: pointer;
+  transition: transform 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.btn-red-sm:hover { transform: scale(1.04); }
+
+.btn-outline {
+  background: #fff;
+  color: var(--text);
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 16px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+}
+.btn-outline:hover { background: var(--bg); }
+
+/* ===== REFRESH BTN ===== */
+.refresh-btn {
+  background: var(--red2);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 7px 14px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s;
+}
+.refresh-btn:hover { transform: scale(1.04); }
+
+/* ===== EMPTY STATE ===== */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--muted);
+}
+.empty-state svg { color: #ddd; margin-bottom: 12px; }
+.empty-state p { font-size: 14px; line-height: 1.6; }
+
+/* ===== ORDER CARDS ===== */
+.order-card {
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.order-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.09); transform: translateY(-1px); }
+
+.order-card-head {
+  padding: 12px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px dashed var(--border);
+}
+.order-id { font-weight: 800; font-size: 14px; color: var(--text); }
+.order-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.status-badge {
+  padding: 5px 10px;
+  border-radius: 50px;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.order-card-body { padding: 10px 14px 12px; }
+.order-items-text { font-size: 12px; color: var(--muted); margin-bottom: 10px; line-height: 1.5; }
+.order-total { font-weight: 800; font-size: 16px; color: var(--text); margin-bottom: 10px; }
+
+.order-action-row { display: flex; gap: 6px; }
+.status-change-btn {
+  flex: 1;
+  padding: 8px 4px;
+  border-radius: 10px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  cursor: pointer;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  transition: all 0.2s;
+  text-align: center;
+}
+.status-change-btn:hover { transform: scale(1.03); }
+.status-change-btn.s-unpaid { background: var(--red); color: #fff; border-color: var(--red); }
+.status-change-btn.s-preparing { background: var(--orange); color: #fff; border-color: var(--orange); }
+.status-change-btn.s-done { background: var(--green); color: #fff; border-color: var(--green); }
+
+/* ===== MENU CARDS ===== */
+.menu-card-admin {
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: box-shadow 0.2s;
+}
+.menu-card-admin:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+
+.menu-thumb {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  object-fit: cover;
+  background: var(--bg);
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+}
+.menu-info-admin { flex: 1; min-width: 0; }
+.menu-name-admin { font-weight: 800; font-size: 14px; margin-bottom: 2px; }
+.menu-cat-admin { font-size: 11px; color: var(--muted); margin-bottom: 3px; }
+.menu-price-admin { font-weight: 800; font-size: 13px; color: var(--red); }
+
+.menu-btns { display: flex; gap: 6px; flex-shrink: 0; }
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.icon-btn-edit { background: #EFF6FF; color: #3B82F6; }
+.icon-btn-edit:hover { background: #3B82F6; color: #fff; }
+.icon-btn-del { background: #FEF2F2; color: var(--red); }
+.icon-btn-del:hover { background: var(--red); color: #fff; }
+
+/* ===== EDIT PANEL (BOTTOM SHEET) ===== */
+.sheet-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 300;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  backdrop-filter: blur(3px);
+}
+.sheet-overlay.open { opacity: 1; pointer-events: all; }
+
+.bottom-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(100%);
+  width: 100%;
+  max-width: 480px;
+  background: #fff;
+  border-radius: 24px 24px 0 0;
+  z-index: 301;
+  transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 -8px 32px rgba(0,0,0,0.18);
+}
+.bottom-sheet.open { transform: translateX(-50%) translateY(0); }
+
+.sheet-header {
+  padding: 20px 20px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1.5px solid var(--border);
+  flex-shrink: 0;
+}
+.sheet-header h3 { font-size: 18px; font-weight: 800; }
+.close-btn {
+  background: var(--border);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.close-btn:hover { background: #ddd; }
+
+.sheet-body { padding: 16px 20px 32px; overflow-y: auto; flex: 1; }
+
+/* ===== FORM ===== */
+.form-group { margin-bottom: 14px; }
+.form-label { display: block; font-weight: 800; font-size: 13px; margin-bottom: 6px; color: var(--text); }
+.form-label span { color: var(--red); }
+
+.form-input {
+  width: 100%;
+  padding: 13px 14px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+  background: var(--bg);
+  color: var(--text);
+}
+.form-input:focus { border-color: var(--red); background: #fff; }
+
+.form-select {
+  width: 100%;
+  padding: 13px 14px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  outline: none;
+  background: var(--bg);
+  color: var(--text);
+  transition: border-color 0.2s;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='20' viewBox='0 -960 960 960' width='20' fill='%23888'%3E%3Cpath d='M480-360 280-560h400L480-360Z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 38px;
+}
+.form-select:focus { border-color: var(--red); background-color: #fff; }
+
+/* ===== STATS ===== */
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.stat-card {
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  text-align: center;
+}
+.stat-num { font-family: 'Fredoka One', cursive; font-size: 30px; color: var(--red); line-height: 1; }
+.stat-label { font-size: 11px; color: var(--muted); font-weight: 700; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.4px; }
+
+.revenue-card {
+  background: linear-gradient(135deg, var(--dark) 0%, var(--dark2) 100%);
+  border-radius: 20px;
+  padding: 22px 20px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+.revenue-label { color: rgba(255,255,255,0.65); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; }
+.revenue-amount { font-family: 'Fredoka One', cursive; font-size: 38px; color: #FFC107; line-height: 1; }
+.revenue-sub { color: rgba(255,255,255,0.45); font-size: 11px; margin-top: 5px; }
+
+/* Popular items */
+.popular-list { background: #fff; border: 1.5px solid var(--border); border-radius: 16px; padding: 8px 14px; }
+.popular-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.popular-item:last-child { border-bottom: none; }
+.popular-rank { font-family: 'Fredoka One', cursive; font-size: 18px; color: var(--muted); width: 24px; text-align: center; flex-shrink: 0; }
+.popular-rank.top { color: var(--red2); }
+.popular-img { width: 42px; height: 42px; border-radius: 8px; object-fit: cover; flex-shrink: 0; border: 1px solid var(--border); }
+.popular-info { flex: 1; min-width: 0; }
+.popular-name { font-weight: 700; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.popular-qty { font-size: 11px; color: var(--muted); }
+.popular-rev { font-weight: 800; font-size: 13px; color: var(--red); flex-shrink: 0; }
+
+/* ===== TOAST ===== */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--dark);
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 13px;
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+}
+.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; visibility: visible; }
+
+/* ===== CONFIRM POPUP ===== */
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 400;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+  backdrop-filter: blur(3px);
+}
+.popup-overlay.open { opacity: 1; pointer-events: all; }
+
+.popup-box {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%) scale(0.85);
+  background: #fff;
+  width: 85%;
+  max-width: 340px;
+  padding: 24px;
+  border-radius: 20px;
+  text-align: center;
+  z-index: 401;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.popup-box.show { transform: translate(-50%,-50%) scale(1); opacity: 1; visibility: visible; }
+.popup-box p { font-weight: 700; font-size: 15px; margin-bottom: 20px; color: var(--text); line-height: 1.5; }
+.popup-actions { display: flex; gap: 10px; }
+
+@media (min-width: 481px) {
+  .app { border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
+}
+  </style>
+</head>
+<body>
+
+<div class="app">
+
+  <div class="login-screen" id="loginScreen">
+    <div class="login-logo">Makan<span>Yuk!</span></div>
+    <div class="login-tagline">Portal Karyawan</div>
+
+    <div class="login-card">
+      <div class="login-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" height="34" viewBox="0 -960 960 960" width="34" fill="currentColor">
+          <path d="M160-120v-80h112l-52-388q-18-7-29-22.5T180-648q0-25 17.5-42.5T240-708q11 0 21 3t19 9l80-54q9-6 19.5-9t21.5-3q24 0 43 13.5t27 36.5l40 120h109q-5 10-7.5 20.5T612-549q0 8 1.5 17t4.5 17l-109 1-47-141-106 71q4 9 5.5 18t1.5 18q0 25-13.5 44T314-530L366-120H160Zm500 40q-83 0-141.5-58.5T460-280q0-83 58.5-141.5T660-480q83 0 141.5 58.5T860-280q0 83-58.5 141.5T660-80Zm-420-80h146l-39-290q-5 1-9.5 1H388q-4 0-8.5-1t-8.5-1l-31 291Zm420 0q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM240-640q0 17 11.5 28.5T280-600q17 0 28.5-11.5T320-640q0-17-11.5-28.5T280-680q-17 0-28.5 11.5T240-640Zm420 280 40 40 100-100-28-28-72 72-22-22-18 18Z"/>
+        </svg>
+      </div>
+      <div class="login-title">Akses Karyawan</div>
+      <div class="login-sub">Masukkan ID Pengguna dan Password untuk melanjutkan</div>
+
+      <div class="login-form-group">
+        <label class="login-label">ID Pengguna</label>
+        <input type="text" id="adminUserId" class="login-input" placeholder="Masukkan ID Karyawan" autocomplete="off">
+      </div>
+      <div class="login-form-group">
+        <label class="login-label">Password</label>
+        <input type="password" id="adminPassword" class="login-input" placeholder="Masukkan Password">
+      </div>
+      
+      <div class="login-err" id="loginErr"></div>
+      <button class="login-btn" onclick="checkCredentials()">Masuk</button>
+    </div>
+
+    <div class="back-link">
+      <a href="index.html">← Kembali ke Aplikasi</a>
+    </div>
+  </div>
+
+  <div class="admin-screen" id="adminScreen">
+
+    <div class="admin-header">
+      <div class="admin-header-left">
+        <div class="logo">Makan<span>Yuk!</span></div>
+        <span class="admin-badge">Admin</span>
+      </div>
+      <button class="logout-btn" onclick="doLogout()">
+        <svg xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 -960 960 960" width="14" fill="currentColor">
+          <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z"/>
+        </svg>
+        Keluar
+      </button>
+    </div>
+
+    <div class="admin-tabs">
+      <button class="admin-tab-btn active" id="tabBtnPesanan" onclick="switchTab('pesanan')">
+        <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor">
+          <path d="M280-80q-33 0-56.5-23.5T200-160q0-33 23.5-56.5T280-240q33 0 56.5 23.5T360-160q0 33-23.5 56.5T280-80Zm400 0q-33 0-56.5-23.5T600-160q0-33 23.5-56.5T680-240q33 0 56.5 23.5T760-160q0 33-23.5 56.5T680-80ZM246-720l96 200h280l110-200H246Zm-38-80h590q23 0 35 20.5t1 41.5L692-482q-11 20-29.5 31T622-440H324l-44 80h480v80H280q-45 0-68-39.5t-2-78.5l54-98-144-304H40v-80h130l38 80Zm134 280h280-280Z"/>
+        </svg>
+        Pesanan
+      </button>
+      <button class="admin-tab-btn" id="tabBtnMenu" onclick="switchTab('menu')">
+        <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor">
+          <path d="M160-120q-33 0-56.5-23.5T80-200v-560q0-33 23.5-56.5T160-840h640q33 0 56.5 23.5T880-760v560q0 33-23.5 56.5T800-120H160Zm0-80h640v-560H160v560Zm40-80h560v-80H200v80Zm0-160h360v-80H200v80Zm0-160h560v-80H200v80Z"/>
+        </svg>
+        Menu
+      </button>
+      <button class="admin-tab-btn" id="tabBtnRingkasan" onclick="switchTab('ringkasan')">
+        <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor">
+          <path d="M120-160v-80l80-80v160h-80Zm160 0v-240l80-80v320h-80Zm160 0v-320l80 81v239h-80Zm160 0v-239l80-80v319h-80Zm160 0v-400l80-80v480h-80ZM120-552l200-200 160 160 200-200 160 160v88L640-824 480-664 320-824 120-624v72Z"/>
+        </svg>
+        Ringkasan
+      </button>
+    </div>
+
+    <div class="admin-content" id="viewPesanan">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <div class="section-title" style="margin-bottom:0;"><span class="section-dot"></span>Semua Pesanan</div>
+        <button class="refresh-btn" onclick="renderOrders()">
+          <svg xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 -960 960 960" width="14" fill="currentColor">
+            <path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-110h80v280H520v-80h168q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h84q-28 106-114 173t-196 67Z"/>
+          </svg>
+          Refresh
+        </button>
+      </div>
+      <div class="filter-row" id="orderFilterRow">
+        <button class="filter-btn active" onclick="setOrderFilter('semua',this)">Semua</button>
+        <button class="filter-btn" onclick="setOrderFilter('belum bayar',this)">Belum Bayar</button>
+        <button class="filter-btn" onclick="setOrderFilter('disiapkan',this)">Disiapkan</button>
+        <button class="filter-btn" onclick="setOrderFilter('selesai',this)">Selesai</button>
+      </div>
+      <div id="orderList"></div>
+    </div>
+
+    <div class="admin-content hidden" id="viewMenu">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <div class="section-title" style="margin-bottom:0;"><span class="section-dot"></span>Kelola Menu</div>
+        <button class="btn-red-sm" onclick="openAddMenu()">
+          <svg xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 -960 960 960" width="14" fill="currentColor"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
+          Tambah
+        </button>
+      </div>
+      <div class="filter-row" id="menuFilterRow">
+        <button class="filter-btn active" onclick="setMenuFilter('semua',this)">Semua</button>
+        <button class="filter-btn" onclick="setMenuFilter('makanan',this)">Makanan</button>
+        <button class="filter-btn" onclick="setMenuFilter('minuman',this)">Minuman</button>
+        <button class="filter-btn" onclick="setMenuFilter('camilan',this)">Camilan</button>
+        <button class="filter-btn" onclick="setMenuFilter('paketan',this)">Paketan</button>
+      </div>
+      <div id="menuList"></div>
+    </div>
+
+    <div class="admin-content hidden" id="viewRingkasan">
+      <div id="revenueCard"></div>
+      <div style="margin-top:14px;margin-bottom:14px;">
+        <div class="section-title"><span class="section-dot"></span>Statistik Pesanan</div>
+        <div class="stats-grid" id="statsGrid"></div>
+      </div>
+      <div>
+        <div class="section-title"><span class="section-dot"></span>Menu Terlaris</div>
+        <div class="popular-list" id="popularList"></div>
+      </div>
+    </div>
+
+  </div></div><div class="sheet-overlay" id="sheetOverlay" onclick="closeSheet()"></div>
+<div class="bottom-sheet" id="menuSheet">
+  <div class="sheet-header">
+    <h3 id="sheetTitle">Tambah Menu</h3>
+    <button class="close-btn" onclick="closeSheet()">✕</button>
+  </div>
+  <div class="sheet-body">
+    <input type="hidden" id="editId">
+    <div class="form-group">
+      <label class="form-label">Nama Menu <span>*</span></label>
+      <input type="text" class="form-input" id="fName" placeholder="Nama menu">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Deskripsi</label>
+      <input type="text" class="form-input" id="fDesc" placeholder="Deskripsi singkat">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Harga (Rp) <span>*</span></label>
+      <input type="number" class="form-input" id="fPrice" placeholder="Contoh: 15000" min="0">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Kategori <span>*</span></label>
+      <select class="form-select" id="fType">
+        <option value="makanan">Makanan</option>
+        <option value="minuman">Minuman</option>
+        <option value="camilan">Camilan</option>
+        <option value="paketan">Paketan</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Badge</label>
+      <select class="form-select" id="fBadge">
+        <option value="">Tidak ada</option>
+        <option value="spicy">Pedas</option>
+        <option value="new">Baru</option>
+      </select>
+    </div>
+    <button class="btn-red" onclick="saveMenu()" style="margin-top:8px;">Simpan</button>
+  </div>
+</div>
+
+<div class="popup-overlay" id="confirmOverlay"></div>
+<div class="popup-box" id="confirmBox">
+  <p id="confirmText">Hapus menu ini?</p>
+  <div class="popup-actions">
+    <button class="btn-outline" style="padding:12px;" onclick="closeConfirm(false)">Tidak</button>
+    <button class="btn-red" style="padding:12px;" onclick="closeConfirm(true)">Ya, Hapus</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== CONFIG =====
+const ADMIN_USER_ID = 'Admin01';
+const ADMIN_PASSWORD = 'Admin01#1234';
+
+// ===== DATA MENU (mirror dari index.html) =====
+const menus = {
+  makanan: [
+    { id:'m1', name:'Mie Pedas Level 1', desc:'Mie kenyal kuah pedas segar', price:18000, img:'images/makanan-1.png', badge:'spicy', type:'makanan' },
+    { id:'m2', name:'Mie Pedas Level 5', desc:'Tantang lidahmu! Extra pedas', price:22000, img:'images/makanan-2.png', badge:'spicy', type:'makanan' },
+    { id:'m3', name:'Nasi Goreng Spesial', desc:'Nasi goreng telur + ayam pilihan', price:20000, img:'images/makanan-3.png', badge:'spicy', type:'makanan' },
+    { id:'m4', name:'Ayam Geprek Sambal', desc:'Ayam crispy + sambal matah segar', price:24000, img:'images/makanan-4.png', badge:'spicy', type:'makanan' },
+    { id:'m5', name:'Kwetiau Goreng', desc:'Kwetiau lembut bumbu kecap', price:19000, img:'images/makanan-5.png', badge:'new', type:'makanan' }
+  ],
+  minuman: [
+    { id:'d1', name:'Es Teh Tawar', desc:'Teh segar tanpa gula', price:5000, img:'images/minuman-1.png', badge:'', type:'minuman' },
+    { id:'d2', name:'Es Jeruk Peras', desc:'Jeruk segar 100% asli', price:8000, img:'images/minuman-2.png', badge:'', type:'minuman' },
+    { id:'d3', name:'Thai Tea Original', desc:'Teh thailand creamy manis', price:15000, img:'images/minuman-3.png', badge:'', type:'minuman' },
+    { id:'d4', name:'Matcha Latte', desc:'Matcha premium + susu segar', price:18000, img:'images/minuman-4.png', badge:'new', type:'minuman' },
+    { id:'d5', name:'Air Mineral', desc:'Air mineral botol 600ml', price:4000, img:'images/minuman-5.png', badge:'', type:'minuman' }
+  ],
+  camilan: [
+    { id:'c1', name:'Dimsum Udang Rambutan', desc:'Udang cincang balut kulit lumpia renyah', price:15000, img:'images/camilan-1.png', badge:'new', type:'camilan' },
+    { id:'c2', name:'Pangsit Goreng', desc:'Pangsit isi ayam cincang renyah', price:14000, img:'images/camilan-2.png', badge:'', type:'camilan' },
+    { id:'c3', name:'Dimsum Siomay Ayam', desc:'4 pcs siomay ayam kukus hangat', price:15000, img:'images/camilan-3.png', badge:'', type:'camilan' },
+    { id:'c4', name:'Lumpia Udang', desc:'Lumpia isi udang renyah gurih', price:16000, img:'images/camilan-4.png', badge:'', type:'camilan' },
+    { id:'c5', name:'Ceker Pedas', desc:'Ceker ayam bumbu pedas mercon', price:12000, img:'images/camilan-5.png', badge:'spicy', type:'camilan' }
+  ],
+  paketan: [
+    { id:'p1', name:'Paket Puas 1', desc:'Mie Pedas Lv 1 + Es Teh + Pangsit', price:32000, img:'images/paketan-1.png', badge:'new', type:'paketan' },
+    { id:'p2', name:'Paket Puas 2', desc:'Nasi Goreng + Es Jeruk + Dimsum', price:38000, img:'images/paketan-2.png', badge:'', type:'paketan' },
+    { id:'p3', name:'Paket Nyemil', desc:'Udang Rambutan + Lumpia Udang', price:28000, img:'images/paketan-3.png', badge:'', type:'paketan' }
+  ]
+};
+
+// ===== STATE =====
+let orderFilter = 'semua';
+let menuFilter = 'semua';
+let editingId = null;
+let deleteTargetId = null;
+let idCounter = 200;
+let toastTimer = null;
+
+// ===== HELPERS =====
+function fmt(n) { return 'Rp ' + n.toLocaleString('id-ID'); }
+function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+function getOrders() { return JSON.parse(localStorage.getItem('makanYuk_orders')) || []; }
+function saveOrders(orders) { localStorage.setItem('makanYuk_orders', JSON.stringify(orders)); }
+
+function findMenu(id) {
+  for (const t of ['makanan','minuman','camilan','paketan']) {
+    const m = menus[t].find(x => x.id === id);
+    if (m) return m;
+  }
+  return null;
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ===== LOGIN =====
+function checkCredentials() {
+  const userIdInput = document.getElementById('adminUserId');
+  const passInput = document.getElementById('adminPassword');
+  
+  const userId = userIdInput.value.trim();
+  const pass = passInput.value;
+
+  if (userId === ADMIN_USER_ID && pass === ADMIN_PASSWORD) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminScreen').classList.add('show');
+    switchTab('pesanan');
+    showToast('Berhasil Masuk!');
+    
+    // Clear inputs after successful login
+    userIdInput.value = '';
+    passInput.value = '';
+  } else {
+    document.getElementById('loginErr').textContent = 'ID Pengguna atau Password salah!';
+    userIdInput.classList.add('error');
+    passInput.classList.add('error');
+    
+    setTimeout(() => {
+      userIdInput.classList.remove('error');
+      passInput.classList.remove('error');
+      document.getElementById('loginErr').textContent = '';
+    }, 1000);
+  }
+}
+
+function doLogout() {
+  // Mengembalikan layar ke menu login
+  document.getElementById('adminScreen').classList.remove('show');
+  document.getElementById('loginScreen').style.display = 'flex';
+  showToast('Berhasil keluar!');
+}
+
+// ===== TABS =====
+function switchTab(tab) {
+  ['pesanan','menu','ringkasan'].forEach(t => {
+    document.getElementById('view' + cap(t)).classList.add('hidden');
+    document.getElementById('tabBtn' + cap(t)).classList.remove('active');
+  });
+  document.getElementById('view' + cap(tab)).classList.remove('hidden');
+  document.getElementById('tabBtn' + cap(tab)).classList.add('active');
+  if (tab === 'pesanan') renderOrders();
+  if (tab === 'menu') renderMenuList();
+  if (tab === 'ringkasan') renderRingkasan();
+}
+
+// ===== ORDERS TAB =====
+function setOrderFilter(f, el) {
+  orderFilter = f;
+  document.querySelectorAll('#orderFilterRow .filter-btn').forEach(b => b.classList.remove('active','active-orange','active-green'));
+  if (f === 'semua') el.classList.add('active');
+  else if (f === 'belum bayar') el.classList.add('active');
+  else if (f === 'disiapkan') el.classList.add('active-orange');
+  else if (f === 'selesai') el.classList.add('active-green');
+  renderOrders();
+}
+
+function renderOrders() {
+  let orders = getOrders();
+  if (orderFilter !== 'semua') orders = orders.filter(o => o.status === orderFilter);
+  const el = document.getElementById('orderList');
+
+  if (!orders.length) {
+    el.innerHTML = `<div class="empty-state"><svg xmlns="http://www.w3.org/2000/svg" height="56" viewBox="0 -960 960 960" width="56" fill="currentColor"><path d="M280-80q-33 0-56.5-23.5T200-160q0-33 23.5-56.5T280-240q33 0 56.5 23.5T360-160q0 33-23.5 56.5T280-80Zm400 0q-33 0-56.5-23.5T600-160q0-33 23.5-56.5T680-240q33 0 56.5 23.5T760-160q0 33-23.5 56.5T680-80ZM246-720l96 200h280l110-200H246Zm-38-80h590q23 0 35 20.5t1 41.5L692-482q-11 20-29.5 31T622-440H324l-44 80h480v80H280q-45 0-68-39.5t-2-78.5l54-98-144-304H40v-80h130l38 80Zm134 280h280-280Z"/></svg><p>Belum ada pesanan.</p></div>`;
+    return;
+  }
+
+  el.innerHTML = orders.map(o => {
+    let badgeColor = 'var(--red)'; let badgeLabel = 'BELUM BAYAR';
+    if (o.status === 'disiapkan') { badgeColor = 'var(--orange)'; badgeLabel = 'DISIAPKAN'; }
+    if (o.status === 'selesai') { badgeColor = 'var(--green)'; badgeLabel = 'SELESAI'; }
+    const preview = o.items.map(i => `${i.name} ×${i.qty}`).join(' • ');
+    const methodLabel = o.method === 'dine_in' ? 'Makan di Tempat' : 'Ambil Kasir';
+    const customer = o.customerName ? ` • Customer ${o.customerName}` : '';
+    return `
+    <div class="order-card">
+      <div class="order-card-head">
+        <div>
+          <div class="order-id">${o.orderId}</div>
+          <div class="order-meta">${o.timestamp} • ${methodLabel}${customer}</div>
+        </div>
+        <span class="status-badge" style="background:${badgeColor};">${badgeLabel}</span>
+      </div>
+      <div class="order-card-body">
+        <div class="order-items-text">${preview}</div>
+        <div class="order-total">${fmt(o.totalHarga)}</div>
+        <div class="order-action-row">
+          <button class="status-change-btn ${o.status==='belum bayar'?'s-unpaid':''}" onclick="setOrderStatus('${o.orderId}','belum bayar')">Belum Bayar</button>
+          <button class="status-change-btn ${o.status==='disiapkan'?'s-preparing':''}" onclick="setOrderStatus('${o.orderId}','disiapkan')">Disiapkan</button>
+          <button class="status-change-btn ${o.status==='selesai'?'s-done':''}" onclick="setOrderStatus('${o.orderId}','selesai')">Selesai</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function setOrderStatus(orderId, status) {
+  const orders = getOrders();
+  const idx = orders.findIndex(o => o.orderId === orderId);
+  if (idx !== -1) {
+    orders[idx].status = status;
+    saveOrders(orders);
+    showToast(`Status → ${status}`);
+    renderOrders();
+  }
+}
+
+// ===== MENU TAB =====
+function setMenuFilter(f, el) {
+  menuFilter = f;
+  document.querySelectorAll('#menuFilterRow .filter-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderMenuList();
+}
+
+function renderMenuList() {
+  let all = [];
+  ['makanan','minuman','camilan','paketan'].forEach(t => menus[t].forEach(m => all.push(m)));
+  if (menuFilter !== 'semua') all = all.filter(m => m.type === menuFilter);
+  const el = document.getElementById('menuList');
+
+  if (!all.length) {
+    el.innerHTML = `<div class="empty-state"><p>Tidak ada menu.</p></div>`;
+    return;
+  }
+
+  const catLabels = { makanan:'Makanan', minuman:'Minuman', camilan:'Camilan', paketan:'Paketan' };
+  const badgeLabels = { spicy:' • Pedas', new:' • Baru', '':'' };
+
+  el.innerHTML = all.map(m => `
+    <div class="menu-card-admin">
+      <img class="menu-thumb" src="${m.img}" alt="${m.name}" onerror="this.src='images/makanan-1.png'">
+      <div class="menu-info-admin">
+        <div class="menu-name-admin">${m.name}</div>
+        <div class="menu-cat-admin">${catLabels[m.type] || m.type}${badgeLabels[m.badge||'']}</div>
+        <div class="menu-price-admin">${fmt(m.price)}</div>
+      </div>
+      <div class="menu-btns">
+        <button class="icon-btn icon-btn-edit" onclick="openEditMenu('${m.id}')" title="Edit">
+          <svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 -960 960 960" width="16" fill="currentColor"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>
+        </button>
+        <button class="icon-btn icon-btn-del" onclick="confirmDelete('${m.id}')" title="Hapus">
+          <svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 -960 960 960" width="16" fill="currentColor"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>
+        </button>
+      </div>
+    </div>`).join('');
+}
+
+function openAddMenu() {
+  editingId = null;
+  document.getElementById('sheetTitle').textContent = 'Tambah Menu Baru';
+  document.getElementById('editId').value = '';
+  document.getElementById('fName').value = '';
+  document.getElementById('fDesc').value = '';
+  document.getElementById('fPrice').value = '';
+  document.getElementById('fType').value = 'makanan';
+  document.getElementById('fBadge').value = '';
+  openSheet();
+}
+
+function openEditMenu(id) {
+  const m = findMenu(id);
+  if (!m) return;
+  editingId = id;
+  document.getElementById('sheetTitle').textContent = 'Edit Menu';
+  document.getElementById('editId').value = id;
+  document.getElementById('fName').value = m.name;
+  document.getElementById('fDesc').value = m.desc;
+  document.getElementById('fPrice').value = m.price;
+  document.getElementById('fType').value = m.type;
+  document.getElementById('fBadge').value = m.badge || '';
+  openSheet();
+}
+
+function openSheet() {
+  document.getElementById('sheetOverlay').classList.add('open');
+  document.getElementById('menuSheet').classList.add('open');
+}
+function closeSheet() {
+  document.getElementById('sheetOverlay').classList.remove('open');
+  document.getElementById('menuSheet').classList.remove('open');
+}
+
+function saveMenu() {
+  const name = document.getElementById('fName').value.trim();
+  const desc = document.getElementById('fDesc').value.trim();
+  const price = parseInt(document.getElementById('fPrice').value);
+  const type = document.getElementById('fType').value;
+  const badge = document.getElementById('fBadge').value;
+
+  if (!name || !price || !type) { showToast('Nama dan harga wajib diisi!'); return; }
+
+  const defaultImgs = { makanan:'images/makanan-1.png', minuman:'images/minuman-1.png', camilan:'images/camilan-1.png', paketan:'images/paketan-1.png' };
+
+  if (editingId) {
+    let found = false;
+    for (const t of ['makanan','minuman','camilan','paketan']) {
+      const idx = menus[t].findIndex(m => m.id === editingId);
+      if (idx !== -1) {
+        const oldImg = menus[t][idx].img;
+        const updated = { id: editingId, name, desc, price, img: oldImg, badge, type };
+        menus[t].splice(idx, 1);
+        menus[type].push(updated);
+        found = true;
+        break;
+      }
+    }
+    if (found) showToast('Menu berhasil diperbarui!');
+  } else {
+    const newId = 'cx_' + (++idCounter);
+    menus[type].push({ id: newId, name, desc, price, img: defaultImgs[type], badge, type });
+    showToast('Menu baru ditambahkan!');
+  }
+
+  closeSheet();
+  renderMenuList();
+}
+
+function confirmDelete(id) {
+  const m = findMenu(id);
+  if (!m) return;
+  deleteTargetId = id;
+  document.getElementById('confirmText').textContent = `Hapus menu "${m.name}"?`;
+  document.getElementById('confirmOverlay').classList.add('open');
+  document.getElementById('confirmBox').classList.add('show');
+}
+
+function closeConfirm(yes) {
+  document.getElementById('confirmOverlay').classList.remove('open');
+  document.getElementById('confirmBox').classList.remove('show');
+  if (yes && deleteTargetId) {
+    for (const t of ['makanan','minuman','camilan','paketan']) {
+      const idx = menus[t].findIndex(m => m.id === deleteTargetId);
+      if (idx !== -1) {
+        const name = menus[t][idx].name;
+        menus[t].splice(idx, 1);
+        showToast(`"${name}" dihapus`);
+        renderMenuList();
+        break;
+      }
+    }
+  }
+  deleteTargetId = null;
+}
+
+// ===== RINGKASAN TAB =====
+function renderRingkasan() {
+  const orders = getOrders();
+  const paid = orders.filter(o => o.status !== 'belum bayar');
+  const totalRev = paid.reduce((s, o) => s + o.totalHarga, 0);
+  const selesai = orders.filter(o => o.status === 'selesai').length;
+  const disiapkan = orders.filter(o => o.status === 'disiapkan').length;
+  const belumBayar = orders.filter(o => o.status === 'belum bayar').length;
+
+  document.getElementById('revenueCard').innerHTML = `
+    <div class="revenue-card">
+      <div class="revenue-label">Total Pendapatan</div>
+      <div class="revenue-amount">${fmt(totalRev)}</div>
+      <div class="revenue-sub">dari ${paid.length} pesanan terbayar</div>
+    </div>`;
+
+  document.getElementById('statsGrid').innerHTML = `
+    <div class="stat-card"><div class="stat-num">${orders.length}</div><div class="stat-label">Total Pesanan</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--green)">${selesai}</div><div class="stat-label">Selesai</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--orange)">${disiapkan}</div><div class="stat-label">Disiapkan</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--red)">${belumBayar}</div><div class="stat-label">Belum Bayar</div></div>`;
+
+  // Popular items
+  const counts = {};
+  orders.forEach(o => o.items.forEach(item => {
+    if (!counts[item.id]) counts[item.id] = { name: item.name, qty: 0, rev: 0, img: item.img };
+    counts[item.id].qty += item.qty;
+    counts[item.id].rev += item.price * item.qty;
+  }));
+  const sorted = Object.values(counts).sort((a,b) => b.qty - a.qty).slice(0,5);
+
+  const popEl = document.getElementById('popularList');
+  if (!sorted.length) {
+    popEl.innerHTML = `<div class="empty-state" style="padding:20px;"><p>Belum ada data penjualan.</p></div>`;
+    return;
+  }
+  popEl.innerHTML = sorted.map((item, i) => `
+    <div class="popular-item">
+      <div class="popular-rank ${i < 3 ? 'top' : ''}">${i+1}</div>
+      <img class="popular-img" src="${item.img}" alt="${item.name}" onerror="this.src='images/makanan-1.png'">
+      <div class="popular-info">
+        <div class="popular-name">${item.name}</div>
+        <div class="popular-qty">${item.qty} terjual</div>
+      </div>
+      <div class="popular-rev">${fmt(item.rev)}</div>
+    </div>`).join('');
+}
+
+// ===== EVENT LISTENERS =====
+document.addEventListener('DOMContentLoaded', () => {
+  // Add support for pressing Enter in password field to login
+  const passInput = document.getElementById('adminPassword');
+  if (passInput) {
+    passInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        checkCredentials();
+      }
+    });
+  }
+});
+</script>
+</body>
+</html>
