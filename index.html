@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>MakanYuk!</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
@@ -26,6 +26,8 @@
   --text: #1A1A2E;
   --muted: #888888;
   --border: #EEEEEE;
+  --nav-height: 62px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 html, body {
@@ -41,6 +43,7 @@ html, body {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  height: 100dvh; /* dynamic viewport height: stable on mobile browsers with shifting address bar */
   max-width: 480px;
   margin: 0 auto;
   background: #fff;
@@ -189,6 +192,16 @@ html, body {
   padding-bottom: 24px;
   -webkit-overflow-scrolling: touch;
   min-height: 0;
+  transition: padding-bottom 0.2s;
+}
+
+/* When the floating cart bar is showing, keep the last menu items from hiding behind it */
+.app:has(.bottom-bar.show) .content {
+  padding-bottom: 96px;
+}
+/* Fallback for browsers without :has() support */
+.app.cart-bar-visible .content {
+  padding-bottom: 96px;
 }
 
 /* ===== ORDER INFO BANNER ===== */
@@ -401,7 +414,7 @@ html, body {
 /* ===== CART BOTTOM BAR (float above nav) ===== */
 .bottom-bar {
   position: fixed;
-  bottom: 68px; /* sits above nav bar */
+  bottom: calc(var(--nav-height) + var(--safe-bottom) + 6px); /* sits above nav bar, adapts to safe area */
   left: 50%;
   transform: translateX(-50%);
   width: calc(100% - 32px);
@@ -412,6 +425,7 @@ html, body {
   display: none;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.22);
   z-index: 90;
 }
@@ -424,12 +438,14 @@ html, body {
   font-size: 11px;
   color: rgba(255,255,255,0.6);
   margin-bottom: 2px;
+  white-space: nowrap;
 }
 
 .bottom-bar-total {
   font-weight: 800;
   font-size: 15px;
   color: #ffffff;
+  white-space: nowrap;
 }
 
 .bottom-bar-btn {
@@ -444,11 +460,27 @@ html, body {
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .bottom-bar-btn:hover {
   transform: scale(1.03);
   box-shadow: 0 4px 12px rgba(255,85,53,0.4);
+}
+
+/* Narrow phones (e.g. small Android / iPhone SE): tighten spacing so nothing wraps or clips */
+@media (max-width: 360px) {
+  .bottom-bar {
+    width: calc(100% - 20px);
+    padding: 8px 10px 8px 12px;
+  }
+  .bottom-bar-btn {
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+  .bottom-bar-total {
+    font-size: 14px;
+  }
 }
 
 /* ===== BOTTOM NAV BAR ===== */
@@ -460,7 +492,8 @@ html, body {
   align-items: stretch;
   z-index: 95;
   box-shadow: 0 -4px 20px rgba(0,0,0,0.07);
-  height: 62px;
+  height: calc(var(--nav-height) + var(--safe-bottom));
+  padding-bottom: var(--safe-bottom); /* keep tap targets clear of home-indicator / gesture area */
   flex-shrink: 0;
   width: 100%;
 }
@@ -2546,11 +2579,9 @@ function updateCardControl(id) {
 function updateBottomBar() {
   const { total, count } = getTotal();
   const bar = document.getElementById('bottomBar');
-  if (!document.getElementById('viewProfile').classList.contains('hidden')) {
-    bar.classList.remove('show');
-  } else {
-    bar.classList.toggle('show', count > 0);
-  }
+  const isShowing = document.getElementById('viewProfile').classList.contains('hidden') && count > 0;
+  bar.classList.toggle('show', isShowing);
+  document.querySelector('.app')?.classList.toggle('cart-bar-visible', isShowing);
   document.getElementById('bottomInfo').textContent = count + ' item';
   document.getElementById('bottomTotal').textContent = fmt(total);
 }
